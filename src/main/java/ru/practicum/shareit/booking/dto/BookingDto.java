@@ -1,31 +1,48 @@
 package ru.practicum.shareit.booking.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import ru.practicum.shareit.item.enums.Status;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.model.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import ru.practicum.shareit.Create;
+import ru.practicum.shareit.Update;
+import ru.practicum.shareit.booking.BookingStatus;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.user.dto.UserDto;
 
-import javax.validation.constraints.Future;
-import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
+@ToString
+@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BookingDto {
     private long id;
-    @FutureOrPresent
+    @Positive(groups = Create.class)
+    @NotNull(groups = Create.class)
+    private Long itemId;
+    @FutureOrPresent(groups = Create.class)
+    @NotNull(groups = Create.class)
     private LocalDateTime start;
-    @Future
+    @Future(groups = Create.class)
+    @NotNull(groups = Create.class)
     private LocalDateTime end;
-    @NotNull
-    private Item item;
-    @NotNull
-    private User booker;
-    @NotNull
-    private Status status;
+    @NotNull(groups = Update.class)
+    private BookingStatus status;
+    private UserDto booker;
+    private ItemDto item;
+
+    @JsonIgnore
+    @AssertTrue(groups = Create.class,
+            message = "Дата окончания должна быть после даты начала, и даты не могут быть одинаковыми")
+    public boolean isValidDateOrder() {
+        if (start == null || end == null) {
+            return false;
+        }
+        return end.isAfter(start) && !end.equals(start);
+    }
 }

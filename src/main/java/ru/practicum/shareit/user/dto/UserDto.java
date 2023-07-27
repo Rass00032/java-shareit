@@ -1,20 +1,27 @@
 package ru.practicum.shareit.user.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import ru.practicum.shareit.Create;
+import ru.practicum.shareit.Update;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
+@Getter
+@Setter
+@ToString
 public class UserDto {
+
     private long id;
-    @NotBlank
-    private String name;
-    @NotBlank
-    @Email
+
+    @Pattern(regexp = "^[A-Z0-9._%+-]+@[A-Z0-9-]+(.[A-Z0-9-]+)*\\.[A-Z]{2,}$", flags = Pattern.Flag.CASE_INSENSITIVE,
+            message = "Неверный адрес электронной почты", groups = {Create.class, Update.class})
+    @NotNull(message = "Адрес электронной почты не может быть пустым", groups = {Create.class})
     private String email;
+
+    private String name;
 }

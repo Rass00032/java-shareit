@@ -9,7 +9,7 @@ public enum BookingState {
         try {
             return BookingState.valueOf(state);
         } catch (IllegalArgumentException e) {
-            throw new BadStateException("Неизвестное состояние: {0}", state);
+            throw new BadStateException("Unknown state: {0}", state);
         }
     }
 }

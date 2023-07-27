@@ -36,8 +36,8 @@ public class ItemController {
     public ResponseEntity<ItemDto> edit(@PathVariable @Positive Long itemId,
                                         @RequestHeader(Variables.USER_ID) @Positive Long userId,
                                         @RequestBody ItemDto itemDto) {
-        log.info("Запрос на редактирование идентификатора элемента: {}, {}, идентификатор пользователя: {}"
-                , itemId, itemDto, userId);
+        log.info("Запрос на редактирование идентификатора элемента: {}, {}, идентификатор пользователя: {}",
+                itemId, itemDto, userId);
         return ResponseEntity.ok(itemService.edit(itemId, userId, itemDto));
     }
 

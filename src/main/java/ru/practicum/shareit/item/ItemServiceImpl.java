@@ -19,6 +19,7 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +36,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemMapper itemMapper;
     private final CommentRepository commentRepository;
 
+    @Transactional
     @Override
     public ItemDto add(long userId, ItemDto itemDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(Variables.USER_WITH_ID_NOT_FOUND, userId));
@@ -43,6 +45,7 @@ public class ItemServiceImpl implements ItemService {
         return itemMapper.toDto(savedItem);
     }
 
+    @Transactional
     @Override
     public ItemDto edit(long itemId, long userId, ItemDto itemDto) {
         boolean isUpdated = false;
@@ -122,6 +125,7 @@ public class ItemServiceImpl implements ItemService {
         return items.stream().map(itemMapper::toDto).collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public CommentDto addComment(Long userId, Long itemId, String commentText) {
         User user = userRepository.findById(userId).orElseThrow(() ->

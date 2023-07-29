@@ -14,6 +14,7 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
+    @Transactional
     @Override
     public BookingDto createBooking(BookingDto bookingDto, Long userId) {
         User user = returnUserOrThrowException(userId);
@@ -43,6 +45,7 @@ public class BookingServiceImpl implements BookingService {
         return bookingMapper.toDto(newBooking);
     }
 
+    @Transactional
     @Override
     public BookingDto updateBookingStatus(Long bookingId, Boolean approved, Long userId) {
         Booking booking = returnBookingOrThrowException(bookingId);
@@ -67,10 +70,12 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = returnBookingOrThrowException(bookingId);
         Item item = booking.getItem();
         User booker = booking.getBooker();
-        if (userId != item.getOwner().getId() && userId != booker.getId()) {
+        User user = returnUserOrThrowException(userId);
+        if (user.equals(item.getOwner()) ^ user.equals(booker)) {   // или хозяин, или автор бронирования
+            return bookingMapper.toDto(booking);
+        } else {
             throw new NotFoundException(Variables.USER_WITH_ID_NOT_HAVE_AVAILABLE, userId);
         }
-        return bookingMapper.toDto(booking);
     }
 
     @Override

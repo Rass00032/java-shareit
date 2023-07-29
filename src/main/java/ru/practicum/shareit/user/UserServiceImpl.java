@@ -31,6 +31,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.toDto(newUser);
     }
 
+    @Transactional
     @Override
     public UserDto edit(Long id, UserDto userDto) {
         boolean isUpdated = false;
@@ -67,6 +68,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.toDto(returnUserOrThrowUserNotFoundException(id));
     }
 
+    @Transactional
     @Override
     public void delete(Long id) {
         userRepository.deleteById(id);

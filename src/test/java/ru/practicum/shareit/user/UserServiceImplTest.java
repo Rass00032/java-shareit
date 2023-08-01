@@ -32,9 +32,13 @@ public class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private UserMapper userMapper;
+
     private User user;
     private UserDto userDto;
     private List<User> users;
+    private List<UserDto> userDtoList;
 
     @BeforeEach
     void setUp() {
@@ -49,6 +53,8 @@ public class UserServiceImplTest {
                 .id(1L)
                 .name("Viktor")
                 .email("viktor@gmail.com").build();
+        userDtoList = new ArrayList<>();
+        userDtoList.add(userDto);
 
     }
 
@@ -151,6 +157,7 @@ public class UserServiceImplTest {
     @Test
     void getAllByUserIdWithValidInputsShouldReturnsUsersWithBookings() {
         when(userRepository.findAll()).thenReturn(users);
+        when(userMapper.toDto(any())).thenReturn(userDto);
 
         List<UserDto> result = userService.getAll();
 

@@ -21,7 +21,6 @@ import ru.practicum.shareit.user.model.User;
 
 import javax.validation.constraints.Positive;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Validated

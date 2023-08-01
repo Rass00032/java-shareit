@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
 import java.nio.charset.StandardCharsets;
@@ -40,12 +41,18 @@ class UserControllerTest {
     private UserMapper userMapper;
 
     private User user;
+    private UserDto userDto;
 
     @BeforeEach
     public void set() {
         user = User.builder()
                 .name("john")
                 .email("john.doe@mail.com").build();
+
+        userDto = UserDto.builder()
+                .id(1L)
+                .name("Viktor")
+                .email("viktor@gmail.com").build();
     }
 
     @Test
@@ -186,10 +193,12 @@ class UserControllerTest {
 
     @Test
     void getAllShouldReturnOk() throws Exception {
-        user.setId(1L);
-        List<User> users = new ArrayList<>();
-        users.add(user);
-        users.add(User.builder()
+
+
+        userDto.setId(1L);
+        List<UserDto> users = new ArrayList<>();
+        users.add(userDto);
+        users.add(UserDto.builder()
                 .id(2L).email("Sheldon.Cooper@big-bang.com")
                 .name("Sheldon Lee Cooper")
                 .build());

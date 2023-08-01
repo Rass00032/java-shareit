@@ -37,8 +37,8 @@ public class BookingController {
     @PostMapping
     public BookingDto createBooking(@RequestHeader(Variables.USER_ID) @Positive Long userId,
                                                     @Validated(Create.class) @RequestBody BookingDto bookingDto) {
-        Booking booking = bookingMapper.fromDto(bookingDto);
-        booking = bookingService.createBooking(booking, userId, bookingDto.getItemId());
+
+        Booking booking = bookingService.createBooking(bookingDto, userId);
         return bookingMapper.toDto(booking);
     }
 
@@ -64,7 +64,7 @@ public class BookingController {
                                                               @RequestParam(defaultValue = "20") @Positive int size) {
         Pageable pageable = Util.getPageable(from, size);
         List<Booking> bookings = bookingService.getBookerBookings(userId, BookingState.get(state), pageable);
-        if (bookings.size() < 1) {
+        if (bookings.isEmpty()) {
             return Collections.emptyList();
         }
         User booker = bookings.get(0).getBooker();

@@ -1,12 +1,13 @@
 package ru.practicum.shareit.booking;
 
 import org.springframework.data.domain.Pageable;
+import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.Booking;
 
 import java.util.List;
 
 public interface BookingService {
-    Booking createBooking(Booking booking, Long userId, long itemId);
+    Booking createBooking(BookingDto bookingDto, Long userId);
 
     Booking updateBookingStatus(Long bookingId, Boolean approved, Long userId);
 

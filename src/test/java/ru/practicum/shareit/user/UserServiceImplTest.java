@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -32,6 +33,7 @@ public class UserServiceImplTest {
     private UserRepository userRepository;
 
     private User user;
+    private UserDto userDto;
     private List<User> users;
 
     @BeforeEach
@@ -42,6 +44,12 @@ public class UserServiceImplTest {
                 .email("viktor@gmail.com").build();
         users = new ArrayList<>();
         users.add(user);
+
+        userDto = UserDto.builder()
+                .id(1L)
+                .name("Viktor")
+                .email("viktor@gmail.com").build();
+
     }
 
     @Test
@@ -51,7 +59,7 @@ public class UserServiceImplTest {
                         .id(1L)
                         .build());
 
-        User result = userService.add(user);
+        User result = userService.add(userDto);
 
         assertEquals(result.getId(), user.getId());
         assertEquals(result.getName(), user.getName());
@@ -144,7 +152,7 @@ public class UserServiceImplTest {
     void getAllByUserIdWithValidInputsShouldReturnsUsersWithBookings() {
         when(userRepository.findAll()).thenReturn(users);
 
-        List<User> result = userService.getAll();
+        List<UserDto> result = userService.getAll();
 
         assertEquals(result.get(0).getId(), user.getId());
         assertEquals(result.get(0).getName(), user.getName());

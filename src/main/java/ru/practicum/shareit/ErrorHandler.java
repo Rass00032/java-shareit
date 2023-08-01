@@ -80,16 +80,4 @@ public class ErrorHandler {
     public ErrorResponse handleException(MethodArgumentTypeMismatchException e) {
         return ErrorResponse.builder().error(e.getMessage()).build();
     }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleException(MissingRequestHeaderException e) {
-        return ErrorResponse.builder().error(e.getMessage()).build();
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleException(BadStateException e) {
-        return ErrorResponse.builder().error(e.getMessage()).build();
-    }
 }

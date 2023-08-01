@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.Variables;
+import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.BadStateException;
@@ -22,23 +24,25 @@ import java.util.List;
 @Service
 public class BookingServiceImpl implements BookingService {
 
+    private final BookingMapper bookingMapper;
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
     @Transactional
     @Override
-    public Booking createBooking(Booking booking, Long userId, long itemId) {
+    public Booking createBooking(BookingDto bookingDto, Long userId) {
         User user = returnUserOrThrowException(userId);
-        Item item = returnItemOrThrowException(itemId);
+        Item item = returnItemOrThrowException(bookingDto.getItemId());
         if (user.getId() == item.getOwner().getId()) {
             throw new NotFoundException("Ты владелец");
         }
-        booking.setStatus(BookingStatus.WAITING);
-        booking.setItem(item);
-        booking.setBooker(user);
-        booking = bookingRepository.save(booking);
-        return booking;
+        Booking newBooking = bookingMapper.fromDto(bookingDto);
+        newBooking.setStatus(BookingStatus.WAITING);
+        newBooking.setItem(item);
+        newBooking.setBooker(user);
+        newBooking = bookingRepository.save(newBooking);
+        return newBooking;
     }
 
     @Transactional

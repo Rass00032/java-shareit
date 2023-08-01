@@ -5,22 +5,26 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.Variables;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Transactional
     @Override
-    public User add(User user) {
+    public User add(UserDto userDto) {
+        User user = userMapper.fromDto(userDto);
         return userRepository.save(user);
     }
 
@@ -49,8 +53,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public List<UserDto> getAll() {
+        return userRepository.findAll().stream().map(userMapper::toDto).collect(Collectors.toList());
     }
 
     @Override

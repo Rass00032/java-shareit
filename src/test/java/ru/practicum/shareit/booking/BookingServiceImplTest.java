@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.mapper.BookingMapperImpl;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.BadStateException;
@@ -16,6 +18,8 @@ import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.repository.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.user.UserMapper;
+import ru.practicum.shareit.user.UserMapperImpl;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -48,10 +52,17 @@ public class BookingServiceImplTest {
     @Mock
     private ItemRepository itemRepository;
 
+    @Mock
+    private BookingMapperImpl bookingMapper;
+
+    @Mock
+    private UserMapperImpl userMapper;
+
     private User booker;
     private User owner;
     private Item item;
     private Booking booking;
+    private BookingDto bookingDto;
     private List<Booking> bookings;
 
     @BeforeEach
@@ -75,6 +86,11 @@ public class BookingServiceImplTest {
                 .booker(booker)
                 .start(now.plusMinutes(1L))
                 .end(now.plusHours(1L)).build();
+        bookingDto = BookingDto.builder()
+                .itemId(item.getId())
+                .booker(userMapper.toDto(booker))
+                .start(now.plusMinutes(1L))
+                .end(now.plusHours(1L)).build();
         bookings = new ArrayList<>();
         bookings.add(booking);
     }
@@ -84,8 +100,11 @@ public class BookingServiceImplTest {
         when(userRepository.findById(any())).thenReturn(Optional.of(booker));
         when(itemRepository.findById(1L)).thenReturn(Optional.of(item));
         when(bookingRepository.save(any())).thenReturn(booking.toBuilder().id(1L).build());
+        when(bookingMapper.fromDto(any())).thenReturn(booking);
 
-        Booking result = bookingService.createBooking(booking, 1L, 1L);
+
+        Booking result = bookingService.createBooking(bookingDto, 1L);
+        bookingDto.setId(1L);
         booking.setId(1L);
 
         assertEquals(booking.getId(), result.getId());
@@ -101,7 +120,7 @@ public class BookingServiceImplTest {
 
         NotFoundException exception = assertThrows(
                 NotFoundException.class,
-                () -> bookingService.createBooking(booking, 2L, 1L)
+                () -> bookingService.createBooking(bookingDto, 2L)
         );
 
         assertEquals("Ты владелец", exception.getMessage());
@@ -114,7 +133,7 @@ public class BookingServiceImplTest {
 
         NotFoundException exception = assertThrows(
                 NotFoundException.class,
-                () -> bookingService.createBooking(booking, 2L, 1L)
+                () -> bookingService.createBooking(bookingDto, 2L)
         );
 
         assertEquals("User with ID: 2 not found", exception.getMessage());
@@ -127,7 +146,7 @@ public class BookingServiceImplTest {
 
         NotFoundException exception = assertThrows(
                 NotFoundException.class,
-                () -> bookingService.createBooking(booking, 2L, 1L)
+                () -> bookingService.createBooking(bookingDto, 2L)
         );
 
         assertEquals("Элемент с идентификатором:1 не найден", exception.getMessage());
@@ -141,7 +160,7 @@ public class BookingServiceImplTest {
 
         NotAvailableException exception = assertThrows(
                 NotAvailableException.class,
-                () -> bookingService.createBooking(booking, 2L, 1L)
+                () -> bookingService.createBooking(bookingDto, 2L)
         );
 
         assertEquals(MessageFormat.format("Элемент с идентификатором: {0} недоступен", item.getId()), exception.getMessage());

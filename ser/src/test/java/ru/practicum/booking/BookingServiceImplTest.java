@@ -37,51 +37,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 public class BookingServiceImplTest {
 
-/*    private final LocalDateTime now = LocalDateTime.now();
-    private final Pageable pageable = Pageable.unpaged();
-    @InjectMocks
-    private BookingServiceImpl bookingService;
-
-    @Mock
-    private BookingRepository bookingRepository;
-
-    @Mock
-    private UserRepository userRepository;
-
-    @Mock
-    private ItemRepository itemRepository;
-
-    private User booker;
-    private User owner;
-    private Item item;
-    private Booking booking;
-    private List<Booking> bookings;
-
-    @BeforeEach
-    void setUp() {
-        booker = User.builder()
-                .id(1L)
-                .name("John")
-                .email("John-Smith@mail.com").build();
-        owner = User.builder()
-                .id(2L)
-                .name("Angelina")
-                .email("angelina@mail.com").build();
-        item = Item.builder()
-                .id(1L)
-                .owner(owner)
-                .name("Grill")
-                .description("Hot grill")
-                .available(true).build();
-        booking = Booking.builder()
-                .item(item)
-                .booker(booker)
-                .start(now.plusMinutes(1L))
-                .end(now.plusHours(1L)).build();
-        bookings = new ArrayList<>();
-        bookings.add(booking);
-    }*/
-
     private final LocalDateTime now = LocalDateTime.now();
     private final Pageable pageable = Pageable.unpaged();
     @InjectMocks
@@ -138,6 +93,7 @@ public class BookingServiceImplTest {
         bookings = new ArrayList<>();
         bookings.add(booking);
     }
+
     @Test
     void createBookingWithValidInputsShouldReturnsBooking() {
         when(userRepository.findById(any())).thenReturn(Optional.of(booker));

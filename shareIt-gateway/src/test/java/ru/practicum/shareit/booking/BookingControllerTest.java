@@ -326,7 +326,7 @@ class BookingControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error", is("Unknown state: alll")));
+                .andExpect(jsonPath("$.error", is("Неизвестное состояние: alll")));
     }
 
     @Test

@@ -51,8 +51,7 @@ public class UserController {
         return userClient.create(userDto);
     }
 
-    //
-//    //Редактирование нового пользователя
+    //Редактирование нового пользователя
     @PatchMapping("{id}")
     public ResponseEntity<Object> update(@Validated(Update.class) @RequestBody UserDto userDto,
                                          @PathVariable @Positive(message = "ID should be positive") Long id) {

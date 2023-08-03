@@ -105,7 +105,7 @@ public class BookingServiceImpl implements BookingService {
                 bookings = bookingRepository.findByBookerAndStatus(booker, BookingStatus.REJECTED, pageable).toList();
                 break;
             default:
-                throw new BadStateException("Неизвестное состояние");
+                throw new BadStateException("Unknown state:");
         }
         return bookings;
     }
@@ -135,7 +135,7 @@ public class BookingServiceImpl implements BookingService {
                 bookings = bookingRepository.findByOwnerAndStatus(owner, BookingStatus.REJECTED, pageable).toList();
                 break;
             default:
-                    throw new BadStateException("Неизвестное состояние");
+                    throw new BadStateException("Unknown state:");
         }
 
         return bookings;

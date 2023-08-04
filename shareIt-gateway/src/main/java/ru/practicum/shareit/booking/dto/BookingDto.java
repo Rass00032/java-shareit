@@ -37,7 +37,6 @@ public class BookingDto {
     @NotNull(groups = Update.class)
     private BookingStatus status;
     private UserDto booker;
-//    private ItemDto item;
 
     @JsonIgnore
     @AssertTrue(groups = Create.class,
